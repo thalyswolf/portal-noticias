@@ -40,16 +40,16 @@ def update_news(body: NewsRequest, response: Response) -> NewsRequest:
 
 
 @app.get('/news', response_model=List[NewsRequest])
-def list_news(body: NewsRequest, response: Response) -> List[NewsRequest]:
+def list_news() -> List[NewsRequest]:
 
     request = {
-        'body': body,
+        'body': None,
         'headers': None,
         'query': None
     }
 
     result = NewsController.list_news(fast_api_adapter(request))
-    response.status_code = result.status_code
+    # response.status_code = result.status_code
 
     return list(map(response_news_adapter, result.body))
 
