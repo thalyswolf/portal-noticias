@@ -15,6 +15,7 @@ class NewsRepositoryMongo(NewsRepository):
         self.collection_author = self.database['author']
 
 
+    @staticmethod
     def _get_news_data(news: News) -> Dict:
         return {
             '_id': news._id,
