@@ -1,3 +1,5 @@
+from traceback import format_exc
+
 from src.infra.repository.author_repository_memory import AuthorRepositoryMemory
 from src.infra.repository.author_repository_mongo import AuthorRepositoryMongo
 from src.controller.contract import HttpRequest, HttpResponse
@@ -19,7 +21,7 @@ class AuthorController:
 
         except Exception:
             return HttpResponse(status_code=500, body={
-                'detail': 'Fatal error'
+                'traceback': format_exc()
             })
     
         else:
@@ -33,12 +35,10 @@ class AuthorController:
 
             list_author = ListAuthor(author_repository)
             result = list_author.execute()
+            
         except Exception:
-            from traceback import format_exc
-            print(format_exc())
-
             return HttpResponse(status_code=500, body={
-                'detail': 'Fatal error'
+                'traceback': format_exc()
             })
     
         else:

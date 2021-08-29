@@ -1,7 +1,10 @@
+from traceback import format_exc
+
 from src.errors.exception_not_found import NotFoundError
 from src.infra.repository.news_repository_mongo import NewsRepositoryMongo
 from src.controller.contract import HttpRequest, HttpResponse
 from src.core.usecase import CreateNews, ListNews, FindNews, UpdateNews, DeleteNews
+
 
 class NewsController:
 
@@ -14,16 +17,9 @@ class NewsController:
             create_news = CreateNews(news_repository)
             result = create_news.execute(news_request)
 
-        except NotFoundError:
-            return HttpResponse(status_code=404, body={
-                'detail': 'Not found'
-            })
-            
         except Exception:
-            from traceback import format_exc
-            print(format_exc())
             return HttpResponse(status_code=500, body={
-                'detail': 'Generic error'
+                'traceback': format_exc()
             })
             
         else:
@@ -36,16 +32,9 @@ class NewsController:
             list_news = ListNews(news_repository)
             result = list_news.execute()
 
-        except NotFoundError:
-            return HttpResponse(status_code=404, body={
-                'detail': 'Not found'
-            })
-
         except Exception:
-            from traceback import format_exc
-            print(format_exc())
             return HttpResponse(status_code=500, body={
-                'detail': 'Generic error'
+                'traceback': format_exc()
             })
 
         else:
@@ -60,16 +49,9 @@ class NewsController:
             find_news = FindNews(news_repository)
             result = find_news.execute(search_param)
 
-        except NotFoundError:
-            return HttpResponse(status_code=404, body={
-                'detail': 'Not found'
-            })
-
         except Exception:
-            from traceback import format_exc
-            print(format_exc())
             return HttpResponse(status_code=500, body={
-                'detail': 'Generic error'
+                'traceback': format_exc()
             })
         
         else:
@@ -86,14 +68,12 @@ class NewsController:
 
         except NotFoundError:
             return HttpResponse(status_code=404, body={
-                'detail': 'Not found'
+                'detail': 'Entitiy is not found'
             })
 
         except Exception:
-            from traceback import format_exc
-            print(format_exc())
             return HttpResponse(status_code=500, body={
-                'detail': 'Generic error'
+                'traceback': format_exc()
             })
 
         else:
@@ -108,16 +88,9 @@ class NewsController:
             delete_news = DeleteNews(news_repository)
             result = delete_news.execute(_id)
 
-        except NotFoundError:
-            return HttpResponse(status_code=404, body={
-                'detail': 'Not found'
-            })
-
         except Exception:
-            from traceback import format_exc
-            print(format_exc())
             return HttpResponse(status_code=500, body={
-                'detail': 'Generic error'
+                'traceback': format_exc()
             })
         
         else:
