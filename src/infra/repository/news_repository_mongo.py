@@ -1,4 +1,5 @@
 from typing import Dict, List
+from src.errors.exception_not_found import NotFoundError
 
 from src.adapter.mongo_news_adapter import mongo_news_adapter
 from src.core.entity import News
@@ -42,15 +43,18 @@ class NewsRepositoryMongo(NewsRepository):
 
     def update_news(self, news: News) -> News:
 
-        my_news_query = { "_id": news._id }
+        try:
+            my_news_query = { "_id": news._id }
 
-        news_data = self._get_news_data(news)
+            news_data = self._get_news_data(news)
 
-        news_db = self.collection_news.find_one_and_update(my_news_query, { "$set": news_data}) 
-        
-        my_author_query  = { "_id": news_db['author'] }
+            news_db = self.collection_news.find_one_and_update(my_news_query, { "$set": news_data}) 
+            
+            my_author_query  = { "_id": news_db['author'] }
 
-        self.collection_author.find_one_and_update(my_author_query, { "$set": {"firstName": news.author.first_name, "lastName": news.author.last_name } })
+            self.collection_author.find_one_and_update(my_author_query, { "$set": {"firstName": news.author.first_name, "lastName": news.author.last_name } })
+        except Exception:
+            raise NotFoundError()
             
         return news
 
@@ -114,6 +118,9 @@ class NewsRepositoryMongo(NewsRepository):
 
     def delete_news(self, _id: str) -> None:
         # TODO Implements transactions
-        news = self.collection_news.find_one({ "_id": _id })
-        _ = self.collection_author.find_one_and_delete( {"_id": news['author']} )
-        self.collection_news.find_one_and_delete({ "_id": _id })
+        try:
+            news = self.collection_news.find_one({ "_id": _id })
+            _ = self.collection_author.find_one_and_delete( {"_id": news['author']} )
+            self.collection_news.find_one_and_delete({ "_id": _id })
+        except Exception:
+            raise NotFoundError()

@@ -23,7 +23,7 @@ class MongoConnection:
             
 
     def get_database(self):
-        return self._client['teste']
+        return self._client['portal_noticia']
 
 
     def get_client(self):

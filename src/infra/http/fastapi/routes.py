@@ -1,5 +1,5 @@
 from typing import List
-from fastapi import FastAPI, Response
+from fastapi import FastAPI, Response, HTTPException
 
 from src.domain.usecase import NewsRequest
 from src.controller import NewsController
@@ -35,6 +35,9 @@ def update_news(body: NewsRequest, response: Response) -> NewsRequest:
 
     result = NewsController().update_news(fast_api_adapter(request))
     response.status_code = result.status_code
+
+    if response.status_code == 404:
+        raise HTTPException(status_code=404, detail="Item not found")
 
     return response_news_adapter(result.body)
 
@@ -86,4 +89,7 @@ def delete_news(_id: str, response: Response) -> None:
 
     result = NewsController().delete_news(fast_api_adapter(request))
     response.status_code = result.status_code
+
+    if response.status_code == 404:
+        raise HTTPException(status_code=404, detail="Item not found")
 
