@@ -1,0 +1,14 @@
+version: "3.5"
+services:
+  portal-noticias:
+    container_name: portal-noticias
+    build: ./
+    ports:
+      - 8081:80
+    volumes:
+      - ../:/home/news
+    networks:
+      - app_network
+networks:
+  app_network:
+    driver: bridge

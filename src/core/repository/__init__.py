@@ -1,0 +1,2 @@
+from src.core.repository.news_repository import NewsRepository
+from src.core.repository.author_repository import AuthorRepository
