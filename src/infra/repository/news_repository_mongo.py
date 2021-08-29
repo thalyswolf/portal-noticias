@@ -1,4 +1,4 @@
-from typing import List
+from typing import Dict, List
 
 from src.adapter.mongo_news_adapter import mongo_news_adapter
 from src.core.entity import News
@@ -15,15 +15,18 @@ class NewsRepositoryMongo(NewsRepository):
         self.collection_author = self.database['author']
 
 
-    def create_news(self, news: News) -> News:
-
-        news_data = {
+    def _get_news_data(news: News) -> Dict:
+        return {
             '_id': news._id,
             'title': news.title,
             'newsText': news.news_text,
             'author': news.author._id,
             'timestamp': news.timestamp
         }
+
+    def create_news(self, news: News) -> News:
+
+        news_data = self._get_news_data(news)
 
         self.collection_news.insert_one(news_data)
 
@@ -41,13 +44,7 @@ class NewsRepositoryMongo(NewsRepository):
 
         my_query = { "_id": news._id }
 
-        news_data = {
-            '_id': news._id,
-            'title': news.title,
-            'newsText': news.news_text,
-            'author': news.author._id,
-            'timestamp': news.timestamp
-        }
+        news_data = self._get_news_data(news)
 
         self.collection_news.find_one_and_update(
             my_query,
