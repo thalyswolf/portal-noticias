@@ -30,6 +30,11 @@ http://localhost:8081/docs -> DOCKER
 ![https://i.imgur.com/l5MliBd.png](https://i.imgur.com/l5MliBd.png)
 
 
+## Análise de código
+Submeti o código a uma analise automática no Better Code Hub e atende todos os requisitos
+![https://i.imgur.com/DL12SEh.png](https://i.imgur.com/DL12SEh.png)
+
+
 ## BANCO DE DADOS 
 O Banco de dados utilizado foi o Mongo, usando a lib pymongo para manipular os dados
 ##### Modelagem
@@ -59,3 +64,4 @@ https://medium.com/luizalabs/descomplicando-a-clean-architecture-cf4dfc4a1ac6
     Enviando um PUT mas passando o id da Noticia, deve ser enviado o payload completo
 5. Deletar Noticias (http://localhost:8000/docs#/default/delete_news_news___id__delete)
     Passando o UUID do usuário na url
+
