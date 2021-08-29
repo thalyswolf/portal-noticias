@@ -2,8 +2,6 @@ from src.core.entity.news import News
 from src.domain.usecase import NewsRequest, AuthorRequest
 
 def response_news_adapter(news: News) -> NewsRequest:
-    print( "aquiiii")
-    print(news)
     author = AuthorRequest(id=news.author._id, firstName=news.author.first_name, lastName=news.author.last_name)
 
     news_response = NewsRequest(

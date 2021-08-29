@@ -88,11 +88,6 @@ class NewsRepositoryMongo(NewsRepository):
                 'as': 'author' 
             },
         }, {
-            "$unwind": {
-                "path": "$author",
-                "preserveNullAndEmptyArrays": True
-            }
-        }, {
             '$match': { 
                 '$or': [{ 
                         'title': { "$regex": search_params, "$options": "i" } 
@@ -107,7 +102,12 @@ class NewsRepositoryMongo(NewsRepository):
                         'author.lastName': { "$regex": search_params, "$options": "i" } 
                     }
                 ]
-            }}
+            }}, {
+                "$unwind": {
+                    "path": "$author",
+                    "preserveNullAndEmptyArrays": True
+                }
+            }
         
         ])
 
