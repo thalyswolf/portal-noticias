@@ -21,14 +21,13 @@ class NewsRepositoryMongo(NewsRepository):
             '_id': news._id,
             'title': news.title,
             'newsText': news.news_text,
-            'author': news.author._id,
             'timestamp': news.timestamp
         }
 
     def create_news(self, news: News) -> News:
 
         news_data = self._get_news_data(news)
-
+        news_data['author'] = news.author._id
         self.collection_news.insert_one(news_data)
 
         author_data = {
@@ -43,16 +42,15 @@ class NewsRepositoryMongo(NewsRepository):
 
     def update_news(self, news: News) -> News:
 
-        my_query = { "_id": news._id }
+        my_news_query = { "_id": news._id }
 
         news_data = self._get_news_data(news)
 
-        self.collection_news.find_one_and_update(
-            my_query,
-            {
-                "$set": news_data
-            }, 
-            upsert=True)
+        news_db = self.collection_news.find_one_and_update(my_news_query, { "$set": news_data}) 
+        
+        my_author_query  = { "_id": news_db['author'] }
+
+        self.collection_author.find_one_and_update(my_author_query, { "$set": {"firstName": news.author.first_name, "lastName": news.author.last_name } })
             
         return news
 
