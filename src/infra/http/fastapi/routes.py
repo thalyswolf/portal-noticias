@@ -18,7 +18,7 @@ def create_news(body: NewsRequest, response: Response) -> NewsRequest:
         'query': None
     }
 
-    result = NewsController.create_news(fast_api_adapter(request))
+    result = NewsController().create_news(fast_api_adapter(request))
     response.status_code = result.status_code
 
     return response_news_adapter(result.body)
@@ -33,13 +33,14 @@ def update_news(body: NewsRequest, response: Response) -> NewsRequest:
         'query': None
     }
 
-    result = NewsController.update_news(fast_api_adapter(request))
+    result = NewsController().update_news(fast_api_adapter(request))
     response.status_code = result.status_code
 
     return response_news_adapter(result.body)
 
 
-@app.get('/news', response_model=List[NewsRequest])
+# @app.get('/news', response_model=List[NewsRequest])
+@app.get('/news')
 def list_news() -> List[NewsRequest]:
 
     request = {
@@ -48,9 +49,10 @@ def list_news() -> List[NewsRequest]:
         'query': None
     }
 
-    result = NewsController.list_news(fast_api_adapter(request))
+    result = NewsController().list_news(fast_api_adapter(request))
     # response.status_code = result.status_code
-
+    
+    print(result)
     return list(map(response_news_adapter, result.body))
 
 
@@ -65,7 +67,7 @@ def find_news(search: str, response: Response) -> List[NewsRequest]:
         }
     }
 
-    result = NewsController.find_news(fast_api_adapter(request))
+    result = NewsController().find_news(fast_api_adapter(request))
     response.status_code = result.status_code
 
     return list(map(response_news_adapter, result.body))
@@ -82,6 +84,6 @@ def delete_news(_id: str, response: Response) -> None:
         }
     }
 
-    result = NewsController.delete_news(fast_api_adapter(request))
+    result = NewsController().delete_news(fast_api_adapter(request))
     response.status_code = result.status_code
 

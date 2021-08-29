@@ -8,64 +8,13 @@ from src.core.usecase import CreateNews, ListNews, FindNews, UpdateNews, DeleteN
 
 class NewsController:
 
-
-    def create_news(request: HttpRequest) -> HttpResponse:
+    def _execute(self, payload, objekt) -> HttpResponse:
         try:
-            news_request = request.payload
-
-            news_repository = NewsRepositoryMongo()
-            create_news = CreateNews(news_repository)
-            result = create_news.execute(news_request)
-
-        except Exception:
-            return HttpResponse(status_code=500, body={
-                'traceback': format_exc()
-            })
-            
-        else:
-            return HttpResponse(status_code=200, body=result)
-
-
-    def list_news(request: HttpRequest) -> HttpResponse:
-        try:
-            news_repository = NewsRepositoryMongo()
-            list_news = ListNews(news_repository)
-            result = list_news.execute()
-
-        except Exception:
-            return HttpResponse(status_code=500, body={
-                'traceback': format_exc()
-            })
-
-        else:
-            return HttpResponse(status_code=200, body=result)
-
-
-    def find_news(request: HttpRequest) -> HttpResponse:
-        try:
-            search_param = request.params['search']
-
-            news_repository = NewsRepositoryMongo()
-            find_news = FindNews(news_repository)
-            result = find_news.execute(search_param)
-
-        except Exception:
-            return HttpResponse(status_code=500, body={
-                'traceback': format_exc()
-            })
+            if payload:
+                result = objekt.execute(payload)
+            else:
+                result = objekt.execute()
         
-        else:
-            return HttpResponse(status_code=200, body=result)
-
-
-    def update_news(request: HttpRequest) -> HttpResponse:
-        try:
-            news_request = request.payload
-
-            news_repository = NewsRepositoryMongo()
-            update_news = UpdateNews(news_repository)
-            result = update_news.execute(news_request)
-
         except NotFoundError:
             return HttpResponse(status_code=404, body={
                 'detail': 'Entitiy is not found'
@@ -75,26 +24,56 @@ class NewsController:
             return HttpResponse(status_code=500, body={
                 'traceback': format_exc()
             })
-
-        else:
-            return HttpResponse(status_code=200, body=result)
-
-
-    def delete_news(request: HttpRequest) -> HttpResponse:
-        try:
-            _id = request.params['id']
-
-            news_repository = NewsRepositoryMongo()
-            delete_news = DeleteNews(news_repository)
-            result = delete_news.execute(_id)
-
-        except Exception:
-            return HttpResponse(status_code=500, body={
-                'traceback': format_exc()
-            })
-        
+            
         else:
             if result:
                 return HttpResponse(status_code=200, body=result)
             else:
                 return HttpResponse(status_code=204, body={})
+
+
+    def create_news(self, request: HttpRequest) -> HttpResponse:
+
+        news_request = request.payload
+
+        news_repository = NewsRepositoryMongo()
+        create_news = CreateNews(news_repository)
+
+        return self._execute(news_request, create_news)
+
+
+    def list_news(self, request: HttpRequest) -> HttpResponse:
+
+        news_repository = NewsRepositoryMongo()
+        list_news = ListNews(news_repository)
+
+        return self._execute(None, list_news)
+     
+
+    def find_news(self, request: HttpRequest) -> HttpResponse:
+
+        search_param = request.params['search']
+
+        news_repository = NewsRepositoryMongo()
+        find_news = FindNews(news_repository)
+
+        return self._execute(search_param, find_news)
+
+
+    def update_news(self, request: HttpRequest) -> HttpResponse:
+
+        news_request = request.payload
+
+        news_repository = NewsRepositoryMongo()
+        update_news = UpdateNews(news_repository)
+   
+        return self._execute(news_request, update_news)
+
+
+    def delete_news(self, request: HttpRequest) -> HttpResponse:
+        _id = request.params['id']
+
+        news_repository = NewsRepositoryMongo()
+        delete_news = DeleteNews(news_repository)
+
+        return self._execute(_id, delete_news)
