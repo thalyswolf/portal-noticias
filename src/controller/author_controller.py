@@ -13,7 +13,6 @@ class AuthorController:
         try:
             create_author_request = request.payload
 
-            # author_repository = AuthorRepositoryMemory()
             author_repository = AuthorRepositoryMongo()
 
             create_author = CreateAuthor(author_repository)
@@ -30,7 +29,7 @@ class AuthorController:
 
     def list_author(request: HttpRequest) -> HttpResponse:
         try:
-            # author_repository = AuthorRepositoryMemory()
+
             author_repository = AuthorRepositoryMongo()
 
             list_author = ListAuthor(author_repository)

@@ -85,31 +85,3 @@ def delete_news(_id: str, response: Response) -> None:
     result = NewsController.delete_news(fast_api_adapter(request))
     response.status_code = result.status_code
 
-
-# @app.post('/author', response_model=AuthorRequest)
-# def save_new_author(body: AuthorRequest, response: Response):
-#     request = {
-#         'body': body,
-#         'headers': None,
-#         'query': None
-#     }
-
-#     result = AuthorController.create_author(fast_api_adapter(request))
-
-#     response.status_code = result.status_code
-
-#     return result.body
-
-
-# @app.get('/author', response_model=List[AuthorRequest])
-# def list_author():
-    # request = {
-    #     'body': None,
-    #     'headers': None,
-    #     'query': None
-    # }
-
-    # result = AuthorController.list_author(fast_api_adapter(request))
-    
-    # return result.body
-
